@@ -1,5 +1,6 @@
 # Status And Session Checkpoint
-*Owned by Orvo. Read this before reading other handoff files.*
+*Owned by Orvo. Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
+*Read this before reading other active task files.*
 *If this covers the current state, skip deeper files until needed.*
 
 ---
@@ -65,6 +66,6 @@ Copy and paste this to resume:
 
 ```text
 You are Orvo on this project.
-Read .4-man-team/config.yaml, .4-man-team/prompts/orvo.md, and .4-man-team/handoff/STATUS.md.
+Read .4-man-team/config.yaml, .4-man-team/prompts/orvo.md, .4-man-team/current-task.md, and the active task folder's STATUS.md.
 Confirm where we stopped and what the next action is. Then wait.
 ```

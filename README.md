@@ -30,7 +30,9 @@ Command:
 bash .4-man-team/orvo.sh
 ```
 
-`orvo.sh` is deployed into each project. It starts Codex by default and injects the first Orvo prompt.
+`src/orvo.sh` is the canonical launcher in this repo. The same file is deployed as `.4-man-team/orvo.sh` in target projects.
+
+It starts Gemini by default and injects the first Orvo prompt.
 
 Task prompt:
 
@@ -45,14 +47,24 @@ Orvo should use:
 ```text
 .4-man-team/config.yaml
 .4-man-team/prompts/
-.4-man-team/handoff/
+.4-man-team/templates/       # read-only seed templates
+.4-man-team/tasks/<task-id>/ # mutable task state
+.4-man-team/current-task.md  # active task pointer
 ```
+
+Existing deployments may still contain `.4-man-team/handoff/` from older versions. That folder is legacy state and should not be used by the current prompts.
 
 Temporary backend override:
 
 ```bash
 FOUR_MAN_TEAM_BACKEND=gemini bash .4-man-team/orvo.sh
 FOUR_MAN_TEAM_BACKEND=opencode bash .4-man-team/orvo.sh
+```
+
+Repo-local entrypoint:
+
+```bash
+npm run orvo
 ```
 
 ## Development

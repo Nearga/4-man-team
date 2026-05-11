@@ -1,5 +1,6 @@
 # Execution Log
 *Written by Executor. Read by Orvo and Reviewer.*
+*Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
 *Append step entries. Do not use this file as a task brief.*
 
 ---

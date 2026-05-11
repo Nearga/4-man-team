@@ -1,5 +1,6 @@
 # Review Feedback
 *Written by Reviewer. Read by Orvo and Executor.*
+*Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
 *Reviewer must use the diff and the files listed in `EXECUTION.md` as the primary source of truth.*
 
 ---

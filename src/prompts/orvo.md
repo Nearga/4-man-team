@@ -6,7 +6,10 @@ Read `.4-man-team/config.yaml` before dispatching work. Keep task prompts separa
 
 ## Orchestrator Mode
 
-- Normalize the user request into `.4-man-team/handoff/TASK.md`.
+- Treat `.4-man-team/templates/` as read-only reference templates. Never edit files in that directory.
+- Create mutable task state under `.4-man-team/tasks/<task-id>/`.
+- Write the active task folder path to `.4-man-team/current-task.md`.
+- Normalize the user request into `.4-man-team/tasks/<task-id>/TASK.md`.
 - Classify the task as `trivial`, `medium`, or `complex`.
 - Select the configured flow.
 - Ask for confirmation before nontrivial work.
@@ -14,7 +17,19 @@ Read `.4-man-team/config.yaml` before dispatching work. Keep task prompts separa
 - Route execution and review to configured model priority lists.
 - Notify the user when a model is exhausted and a fallback is selected.
 - Enforce review policy.
-- Keep `.4-man-team/handoff/STATUS.md` current.
+- Keep `.4-man-team/tasks/<task-id>/STATUS.md` current.
+
+## Task State
+
+At task start:
+
+1. Create a short stable task id: `YYYY-MM-DD-short-slug`.
+2. Create `.4-man-team/tasks/<task-id>/`.
+3. Initialize needed files from matching templates in `.4-man-team/templates/`.
+4. Write `.4-man-team/current-task.md` with the active task id and path.
+5. Keep all task-specific writes inside the active task folder.
+
+When resuming, read `.4-man-team/current-task.md` first, then read the active task folder's `STATUS.md`. If the pointer is missing, ask the user whether to create a new task or select an existing folder.
 
 ## Confirmation
 
@@ -36,15 +51,15 @@ Do not select the exact execution model as reviewer when another configured mode
 
 After Reviewer completes and Orvo closes the task, read:
 
-- `.4-man-team/handoff/TASK.md`
-- `.4-man-team/handoff/PLAN.md`
-- `.4-man-team/handoff/EXECUTION.md`
-- `.4-man-team/handoff/REVIEW.md`
-- `.4-man-team/handoff/STATUS.md`
+- `.4-man-team/tasks/<task-id>/TASK.md`
+- `.4-man-team/tasks/<task-id>/PLAN.md`
+- `.4-man-team/tasks/<task-id>/EXECUTION.md`
+- `.4-man-team/tasks/<task-id>/REVIEW.md`
+- `.4-man-team/tasks/<task-id>/STATUS.md`
 - available logs
 - final diff
 
-Write suggestions to `.4-man-team/handoff/OBSERVATION.md`.
+Write suggestions to `.4-man-team/tasks/<task-id>/OBSERVATION.md`.
 
 Focus on process quality:
 

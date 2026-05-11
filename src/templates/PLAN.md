@@ -1,5 +1,6 @@
 # Arch Plan
 *Written by Arch. Read by Orvo, Executor, and Reviewer.*
+*Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
 *Overwrite this file for each active task. It is the executable brief.*
 
 ---

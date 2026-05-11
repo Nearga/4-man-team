@@ -1,5 +1,6 @@
 # Task Packet
 *Written by Orvo. Read by Arch, Executor, Reviewer, and Orvo observation mode.*
+*Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
 *Overwrite this file for each active task. It is the current contract, not a log.*
 
 ---

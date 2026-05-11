@@ -6,6 +6,12 @@ framework:
   planning_agent: arch
   observer_agent: orvo
 
+paths:
+  templates_dir: .4-man-team/templates
+  tasks_dir: .4-man-team/tasks
+  current_task_pointer: .4-man-team/current-task.md
+  active_task_pattern: .4-man-team/tasks/<task-id>
+
 review_policy:
   require_different_model_than_executor: true
   require_different_provider_when_possible: true
@@ -71,4 +77,4 @@ observer_policy:
   run_after_reviewer: true
   run_only_when_task_closed: true
   blocks_closure: false
-  write_to: .4-man-team/handoff/OBSERVATION.md
+  write_to: .4-man-team/tasks/<task-id>/OBSERVATION.md

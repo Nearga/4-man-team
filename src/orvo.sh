@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BACKEND="${FOUR_MAN_TEAM_BACKEND:-codex}"
-PROMPT="Read .4-man-team/config.yaml and .4-man-team/prompts/orvo.md. You are Orvo. Ask me for the task."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BACKEND="${FOUR_MAN_TEAM_BACKEND:-gemini}"
+PROMPT="Read ${SCRIPT_DIR}/config.yaml and ${SCRIPT_DIR}/prompts/orvo.md. You are Orvo. Ask me for the task."
 
 case "${BACKEND}" in
   codex)
-    printf '%s\n' "${PROMPT}"
-    exec codex
+    exec codex "${PROMPT}"
     ;;
   gemini)
-    exec gemini --prompt "${PROMPT}"
+    exec gemini --prompt-interactive "${PROMPT}"
     ;;
   opencode)
-    exec opencode run --prompt "${PROMPT}"
+    exec opencode --prompt "${PROMPT}"
     ;;
   *)
     printf 'Unknown FOUR_MAN_TEAM_BACKEND: %s\n' "${BACKEND}" >&2

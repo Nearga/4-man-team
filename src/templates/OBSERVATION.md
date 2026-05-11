@@ -1,5 +1,6 @@
 # Observation
 *Written by Orvo observation mode after Reviewer completes and Orvo closes the task.*
+*Template source only. Copy into `.4-man-team/tasks/<task-id>/` before writing.*
 *Does not replace review. Does not block closure unless a critical missed risk is found.*
 
 ## Orvo Observation Mode
@@ -18,7 +19,7 @@
 
 - [Workflow improvement]
 - [Verification improvement]
-- [Handoff improvement]
+- [Task-state improvement]
 
 ## Routing Notes
 

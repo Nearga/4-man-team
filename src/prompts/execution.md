@@ -1,10 +1,12 @@
 # Execution Prompt
 
-Implement the task described in `.4-man-team/handoff/TASK.md`.
+Read `.4-man-team/current-task.md`, then implement the task described in the active task folder's `TASK.md`.
 
-If `.4-man-team/handoff/PLAN.md` exists, follow it unless repo reality proves it wrong. If the plan is wrong, stop and report the mismatch instead of improvising a new architecture.
+If the active task folder's `PLAN.md` exists, follow it unless repo reality proves it wrong. If the plan is wrong, stop and report the mismatch instead of improvising a new architecture.
 
-Write implementation notes to `.4-man-team/handoff/EXECUTION.md`.
+Write implementation notes to the active task folder's `EXECUTION.md`.
+
+Treat `.4-man-team/templates/` as read-only reference material. Do not edit templates; all task-specific state belongs in `.4-man-team/tasks/<task-id>/`.
 
 Required behavior:
 

@@ -8,19 +8,6 @@ describe("deployment config", () => {
     );
   });
 
-  test("parses dry-run and force flags", () => {
-    const args = parseArgs(["--dry-run", "--force"], {
-      configPath: "/default/projects.local.json",
-      cwd: "/repo",
-    });
-
-    expect(args).toEqual({
-      configPath: "/default/projects.local.json",
-      dryRun: true,
-      force: true,
-    });
-  });
-
   test("resolves custom config path from current working directory", () => {
     const args = parseArgs(["--config", "deployment/custom.json"], {
       configPath: "/default/projects.local.json",
@@ -29,9 +16,22 @@ describe("deployment config", () => {
 
     expect(args).toEqual({
       configPath: "/repo/deployment/custom.json",
-      dryRun: false,
-      force: false,
     });
   });
-});
 
+  test("rejects removed dry-run and force flags", () => {
+    expect(() =>
+      parseArgs(["--dry-run"], {
+        configPath: "/default/projects.local.json",
+        cwd: "/repo",
+      }),
+    ).toThrow("Unknown argument: --dry-run");
+
+    expect(() =>
+      parseArgs(["--force"], {
+        configPath: "/default/projects.local.json",
+        cwd: "/repo",
+      }),
+    ).toThrow("Unknown argument: --force");
+  });
+});

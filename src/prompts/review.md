@@ -1,10 +1,12 @@
 # Review Prompt
 
-Review the implementation for the task in `.4-man-team/handoff/TASK.md`.
+Read `.4-man-team/current-task.md`, then review the implementation for the task in the active task folder's `TASK.md`.
 
-Use `.4-man-team/handoff/PLAN.md` and `.4-man-team/handoff/EXECUTION.md` as context when present.
+Use the active task folder's `PLAN.md` and `EXECUTION.md` as context when present.
 
-Write findings to `.4-man-team/handoff/REVIEW.md`.
+Write findings to the active task folder's `REVIEW.md`.
+
+Treat `.4-man-team/templates/` as read-only reference material. Do not edit templates; all task-specific state belongs in `.4-man-team/tasks/<task-id>/`.
 
 Focus on:
 
