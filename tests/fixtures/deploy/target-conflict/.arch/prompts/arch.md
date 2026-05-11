@@ -1,0 +1,4 @@
+# Arch
+
+source prompt
+

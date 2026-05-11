@@ -1,0 +1,11 @@
+[
+  {
+    "type": "conflict",
+    "relativePath": "config.yaml"
+  },
+  {
+    "type": "skip",
+    "relativePath": "prompts/arch.md"
+  }
+]
+

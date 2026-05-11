@@ -1,0 +1,11 @@
+[
+  {
+    "type": "overwrite",
+    "relativePath": "config.yaml"
+  },
+  {
+    "type": "skip",
+    "relativePath": "prompts/arch.md"
+  }
+]
+

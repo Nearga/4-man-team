@@ -1,0 +1,10 @@
+{
+  "projects": [
+    {
+      "name": "example-project",
+      "path": "/absolute/local/path/to/project",
+      "enabled": true
+    }
+  ]
+}
+

@@ -2,6 +2,8 @@
 
 Four-Man Team is a reusable project template for running one visible AI controller over multiple coding agents.
 
+Inspired by [russelleNVy/three-man-team](https://github.com/russelleNVy/three-man-team). This version adds agent routing (agents are set in config, per task type) and a fourth **Observer** agent that reviews logs after task closure and suggests improvements.
+
 The intended daily workflow:
 
 1. Open the project in Superset.
@@ -25,6 +27,10 @@ target-project/
 ```
 
 Then configure Superset to launch Arch with the target project as the working directory. See [Superset Setup](docs/Superset Setup.md).
+
+## Development
+
+Tests use `bun:test` and are split by feature. See [Testing](docs/Testing.md).
 
 ## Main Guarantees
 

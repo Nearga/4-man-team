@@ -1,0 +1,26 @@
+{
+  "name": "four-man-team",
+  "version": "0.1.0",
+  "description": "Superset-first multi-agent routing template with planner, executor, reviewer, and observer roles.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:dry": "bash scripts/deploy.sh --dry-run",
+    "deploy:force": "bash scripts/deploy.sh --force",
+    "test": "bun test"
+  },
+  "keywords": [
+    "ai-agents",
+    "superset",
+    "codex",
+    "gemini",
+    "opencode",
+    "agent-routing"
+  ],
+  "author": "",
+  "license": "MIT"
+}

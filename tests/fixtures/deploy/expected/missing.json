@@ -1,0 +1,11 @@
+[
+  {
+    "type": "create",
+    "relativePath": "config.yaml"
+  },
+  {
+    "type": "create",
+    "relativePath": "prompts/arch.md"
+  }
+]
+
