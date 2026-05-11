@@ -71,3 +71,11 @@ npm run orvo
 ```bash
 npm test
 ```
+
+Workflow helpers:
+
+```bash
+npm run slug -- "task title"
+npm run task:resolve -- --root /path/to/project
+npm run plan:check -- /path/to/project/.4-man-team/tasks/task-id/PLAN.md
+```

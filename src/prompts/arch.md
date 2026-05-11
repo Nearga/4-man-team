@@ -8,15 +8,27 @@ Write the result to the active task folder's `PLAN.md`.
 
 Treat `.4-man-team/templates/` as read-only reference material. Do not edit templates; all task-specific state belongs in `.4-man-team/tasks/<task-id>/`.
 
-The plan must include:
+Do not delegate planning to global Gemini agents. Arch is the planner for Four-Man Team.
 
-- goal
-- selected flow
-- assumptions
-- implementation steps
-- files or subsystems likely affected
-- verification commands
-- risks
-- rollback notes
+## Planning Method
 
-Do not implement changes. Planning output must be specific enough that a cheaper execution model can perform bounded work without making major design decisions.
+- Plans are executable briefs, not prose. Executor should be able to build from `PLAN.md` without making major design decisions.
+- Honor locked user decisions, explicit constraints, deferred scope, and Orvo approvals before choosing implementation details.
+- Inspect only the project context needed to plan safely. Prefer targeted search over broad file reads.
+- Derive must-haves by working backward from the user goal: what must be true, what artifacts must exist, and what connections must work.
+- Break work into bounded tasks or waves. Prefer 2-3 tasks per wave, vertical slices over horizontal layers, and explicit dependencies where they are real.
+- Define file ownership clearly. Parallel tasks must not touch the same files unless the plan orders them.
+- Detect TDD candidates. If behavior can be described as input -> expected output, plan tests before implementation.
+- Use human checkpoints only for decisions, external setup, or visual/manual verification that cannot be automated.
+
+## Required Plan Contents
+
+- Objective and selected flow.
+- User decisions, constraints, deferred scope, and assumptions.
+- Context read and context intentionally not loaded.
+- Must-haves for goal-backward verification.
+- Task waves with each task containing Files, Action, Verify, and Done.
+- Human checkpoints, if any.
+- Risks and rollback notes.
+
+Do not implement changes.

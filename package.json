@@ -10,6 +10,9 @@
   "scripts": {
     "orvo": "bash src/orvo.sh",
     "deploy": "bash scripts/deploy.sh",
+    "task:resolve": "bun run scripts/four-man-team.ts task resolve",
+    "plan:check": "bun run scripts/four-man-team.ts plan check",
+    "slug": "bun run scripts/four-man-team.ts slug",
     "test": "bun test"
   },
   "keywords": [

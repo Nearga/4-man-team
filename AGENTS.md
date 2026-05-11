@@ -15,6 +15,9 @@ This repository is a Bun-based TypeScript project for the Four-Man Team agent wo
 
 - `npm run orvo` starts the local Orvo launcher from `src/orvo.sh`.
 - `npm run deploy` replaces each configured target’s `.4-man-team/` directory with `src/`.
+- `npm run task:resolve -- --root /path/to/project` resolves recent unfinished task state.
+- `npm run plan:check -- path/to/PLAN.md` validates the executable plan structure.
+- `npm run slug -- "task title"` generates stable task-id slugs.
 - `npm test` runs the Bun test suite.
 
 ## Coding Style & Naming Conventions

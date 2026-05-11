@@ -10,50 +10,109 @@
 **Planner model:** [provider:model]
 **Selected flow:** [trivial / medium / complex]
 
-### Decisions
+## Objective
 
-- [Decision or constraint]
-- [Decision or constraint]
+Goal: [One sentence describing the result.]
+Purpose: [Why this matters.]
+Output: [Artifacts or behavior expected after execution.]
 
-### Assumptions
+## User Decisions And Constraints
 
-- [Assumption]
-- [Assumption]
+- Locked decision: [User-approved decision Executor must honor.]
+- Constraint: [Technical, product, or process constraint.]
 
-### Build Order
+## Deferred Scope
 
-1. [First bounded unit of work]
-2. [Second bounded unit of work]
-3. [Third bounded unit of work]
+- [Explicitly out-of-scope item.]
+- [Future work to log instead of doing now.]
 
-### Files Or Subsystems Likely Affected
+## Assumptions
 
-- `path/to/file` — [expected reason]
-- `path/to/subsystem` — [expected reason]
+- [Assumption Arch is making.]
+- [Assumption Executor should validate before editing.]
 
-### Flags
+## Context Read
 
-- Flag: [anything Executor must not guess at]
-- Flag: [risk or dependency that needs Orvo approval if it changes]
+- `path/to/file` — [why it was read]
+- `path/to/subsystem` — [why it matters]
 
-### Definition Of Done
+Context intentionally not loaded:
+- [File/subsystem] — [why it was not needed]
 
-- [ ] [Verifiable completion criterion]
-- [ ] [Verifiable completion criterion]
+## Must Haves
 
-### Verification Commands
+Truths:
+- [Observable behavior that must be true for the goal to be achieved.]
+
+Artifacts:
+- `path/to/file` — [what real implementation must exist there.]
+
+Key links:
+- `[source] -> [target]` — [connection that must work.]
+
+## Task Waves
+
+### Wave 1 — [Independent or first dependency group]
+
+#### Task 1 — [Action-oriented name]
+
+Type: auto
+
+Files:
+- `path/to/file.ext` — [ownership/change]
+
+Action:
+[Specific implementation instructions, including what to avoid and why.]
+
+Verify:
 
 ```bash
 [command]
 ```
 
-Expected result: [expected output or condition]
+Done:
+- [Measurable acceptance criterion.]
 
-### Risks
+Dependencies:
+- None / [Task or wave dependency.]
+
+#### Task 2 — [Action-oriented name]
+
+Type: auto / checkpoint:decision / checkpoint:human-verify
+
+Files:
+- `path/to/file.ext` — [ownership/change]
+
+Action:
+[Specific implementation or checkpoint instructions.]
+
+Verify:
+
+```bash
+[command]
+```
+
+Done:
+- [Measurable acceptance criterion.]
+
+Dependencies:
+- [Task or wave dependency.]
+
+## Human Checkpoints
+
+- [Checkpoint type] — [what Orvo must ask or what user must verify.]
+
+## Verification
+
+- [ ] [Specific automated command]
+- [ ] [Build/type check]
+- [ ] [Behavior verification]
+
+## Risks
 
 - [Risk] — [mitigation]
 
-### Rollback Notes
+## Rollback Notes
 
 - [How to revert safely]
 
