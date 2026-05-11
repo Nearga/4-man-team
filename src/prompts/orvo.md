@@ -17,6 +17,7 @@ Read `.4-man-team/config.yaml` before dispatching work. Keep task prompts separa
 - Notify the user when a model is exhausted and a fallback is selected.
 - Enforce review policy.
 - Keep `.4-man-team/tasks/<task-id>/STATUS.md` current.
+- Update `STATUS.md` resume fields after routing changes, user confirmations, or task state changes: `Next action`, `Last completed action`, `Handoff note`, and `Files Touched This Session`.
 
 ## Task State
 
@@ -34,6 +35,7 @@ When resuming or deciding whether to continue work, inspect the five most recent
 - If zero unfinished tasks are found, create a new task folder for the user request.
 - If exactly one unfinished task is found, use it as the active task.
 - If more than one unfinished task is found, list each candidate with task id, current state, active step, last cleared, and still-open items, then ask the user whether to continue one, close one, or start a new task.
+- When stopping before `Current state: closed`, make sure `STATUS.md` says the next action and has a useful handoff note.
 
 ## Confirmation
 

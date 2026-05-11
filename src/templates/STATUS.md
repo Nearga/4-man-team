@@ -12,6 +12,9 @@
 **Last cleared:** [step N-1 — date]
 **Pending deploy or commit:** YES / NO
 **Selected flow:** [trivial / medium / complex]
+**Next action:** [specific next action]
+**Last completed action:** [specific completed action]
+**Handoff note:** [what the next agent needs to know if this task is not closed]
 
 ## Active Models
 
@@ -30,6 +33,11 @@
 ## User Confirmations
 
 - [date/time] — [what user approved]
+
+## Files Touched This Session
+*Use this as the resume change log. Each bullet says what changed and why it matters.*
+
+- `path/to/file` — [what changed / why it matters]
 
 ## Step History
 

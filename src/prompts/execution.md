@@ -16,3 +16,6 @@ Required behavior:
 - record changed files
 - record commands run and outcomes
 - record blockers and skipped checks
+- update `STATUS.md` before stopping when work is incomplete or files changed
+- keep `Files Touched This Session` current with `path` — what changed / why it matters
+- update `Last completed action`, `Next action`, and `Handoff note` so another agent can resume without chat history

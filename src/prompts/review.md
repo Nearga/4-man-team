@@ -16,6 +16,7 @@ Focus on:
 - missing tests
 - unsafe assumptions
 - unclear migration or rollback behavior
+- stale or missing `STATUS.md` handoff/change-log details that would make resume unclear
 
 Do not rewrite the implementation unless Orvo explicitly asks for fixes.
 
