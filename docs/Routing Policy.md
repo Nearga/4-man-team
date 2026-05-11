@@ -62,15 +62,15 @@ Default flow:
 
 The exact model that executed a task must not be selected as reviewer when another configured model is available.
 
-Prefer a different provider. If only the same provider is available, use a different model. If no distinct reviewer is available, Arch asks the user whether to proceed.
+Prefer a different provider. If only the same provider is available, use a different model. If no distinct reviewer is available, Orvo asks the user whether to proceed.
 
-## Observer Rule
+## Observation Rule
 
-Observer runs after Reviewer when Arch closes the task.
+Orvo runs observer mode after Reviewer when Orvo closes the task.
 
-Observer does not replace Reviewer and does not block closure by default. Its job is to read `TASK.md`, `PLAN.md`, `EXECUTION.md`, `REVIEW.md`, `STATUS.md`, relevant logs, and the final diff, then write suggestions to `OBSERVATION.md`.
+Observation mode does not replace Reviewer and does not block closure by default. Its job is to read `TASK.md`, `PLAN.md`, `EXECUTION.md`, `REVIEW.md`, `STATUS.md`, relevant logs, and the final diff, then write suggestions to `OBSERVATION.md`.
 
-Observer focuses on:
+Observation mode focuses on:
 
 - missed signals in logs
 - workflow improvements
@@ -83,7 +83,7 @@ Observer focuses on:
 
 When a model is unavailable or exhausted:
 
-1. Arch reports the failed model and phase.
-2. Arch selects the next model from the phase priority list.
-3. Arch records the fallback in `STATUS.md`.
-4. If all models for a phase fail, Arch asks the user to choose a narrower scope or wait for quota recovery.
+1. Orvo reports the failed model and phase.
+2. Orvo selects the next model from the phase priority list.
+3. Orvo records the fallback in `STATUS.md`.
+4. If all models for a phase fail, Orvo asks the user to choose a narrower scope or wait for quota recovery.

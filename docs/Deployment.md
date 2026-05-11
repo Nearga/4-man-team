@@ -1,6 +1,6 @@
 # Deployment
 
-Four-Man Team can deploy its reusable `.arch/` template into local projects.
+Four-Man Team can deploy its reusable `src/` files into local projects as `.4-man-team/`.
 
 Local project paths stay in `deployment/projects.local.json`. That file is ignored by Git. Keep the script and example config public.
 
@@ -48,7 +48,7 @@ bash scripts/deploy.sh --config deployment/projects.local.json --dry-run
 
 ## Hash Guard
 
-For every file under `template/.arch/`, the script computes SHA-256 for the source and target file.
+For every file under `src/`, the script computes SHA-256 for the source and target file.
 
 - Missing target file: create it.
 - Matching target file: skip it.
@@ -56,7 +56,9 @@ For every file under `template/.arch/`, the script computes SHA-256 for the sour
 - `--force`: overwrite different target files and print every overwritten path.
 - `--dry-run`: report actions without writing files.
 
-Unknown files under the target `.arch/` are preserved. Files removed from the source template are not deleted from targets in v1.
+Unknown files under the target `.4-man-team/` are preserved. Files removed from `src/` are not deleted from targets in v1.
+
+The deployed `.4-man-team/orvo.sh` script is the Superset launcher. It starts the selected backend and supplies the first Orvo prompt.
 
 ## Tests
 

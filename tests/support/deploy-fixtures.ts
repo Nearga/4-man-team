@@ -3,7 +3,7 @@ import path from "node:path";
 import type { planDeployment } from "../../scripts/deploy-core";
 
 export const deployFixturesDir = path.join(import.meta.dir, "..", "fixtures", "deploy");
-export const deploySourceDir = path.join(deployFixturesDir, "source", ".arch");
+export const deploySourceDir = path.join(deployFixturesDir, "source", ".4-man-team");
 
 export type ExpectedOperation = {
   type: string;

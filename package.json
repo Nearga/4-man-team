@@ -8,6 +8,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "orvo": "bash scripts/orvo.sh",
     "deploy": "bash scripts/deploy.sh",
     "deploy:dry": "bash scripts/deploy.sh --dry-run",
     "deploy:force": "bash scripts/deploy.sh --force",

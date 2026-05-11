@@ -5,7 +5,14 @@
   },
   {
     "type": "create",
+    "relativePath": "orvo.sh"
+  },
+  {
+    "type": "create",
     "relativePath": "prompts/arch.md"
+  },
+  {
+    "type": "create",
+    "relativePath": "prompts/orvo.md"
   }
 ]
-

@@ -12,7 +12,7 @@ import {
 } from "./deploy-core";
 
 const rootDir = path.resolve(import.meta.dir, "..");
-const sourceDir = path.join(rootDir, "template", ".arch");
+const sourceDir = path.join(rootDir, "src");
 const defaultConfigPath = path.join(rootDir, "deployment", "projects.local.json");
 const exampleConfigPath = path.join(rootDir, "deployment", "projects.example.json");
 
@@ -29,7 +29,7 @@ function formatOperation(type: DeployOperationType, dryRun: boolean): string {
 async function deployProject(projectName: string, projectPath: string, args: ReturnType<typeof parseArgs>): Promise<number> {
   await assertDirectory(projectPath, `Project "${projectName}" path`);
 
-  const targetDir = path.join(projectPath, ".arch");
+  const targetDir = path.join(projectPath, ".4-man-team");
   const plan = await planDeployment({ sourceDir, targetDir, force: args.force });
 
   console.log(`\n== ${projectName}`);

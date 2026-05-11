@@ -2,7 +2,9 @@ framework:
   name: Four-Man Team
   version: 0.1.0
   entrypoint: superset
-  user_facing_agent: arch
+  user_facing_agent: orvo
+  planning_agent: arch
+  observer_agent: orvo
 
 review_policy:
   require_different_model_than_executor: true
@@ -26,7 +28,6 @@ model_priorities:
   planning:
     - codex:gpt-5.3-codex
     - gemini:gemini-3-pro
-    - mastracode:openai/gpt-5.2-codex
     - opencode:opencode-go/glm-5.1
   execution:
     - opencode:opencode-go/qwen3.6-plus
@@ -66,7 +67,8 @@ fallback:
   stop_after_all_models_fail: true
 
 observer_policy:
+  agent: orvo
   run_after_reviewer: true
   run_only_when_task_closed: true
   blocks_closure: false
-  write_to: .arch/handoff/OBSERVATION.md
+  write_to: .4-man-team/handoff/OBSERVATION.md
