@@ -1,6 +1,6 @@
 # Execution Prompt
 
-Read `.4-man-team/current-task.md`, then implement the task described in the active task folder's `TASK.md`.
+Resolve the active task by inspecting the five most recent folders under `.4-man-team/tasks/` and reading each `STATUS.md`. If exactly one task is unfinished, implement the task described in that task folder's `TASK.md`. If more than one task is unfinished, stop and ask Orvo which task to use.
 
 If the active task folder's `PLAN.md` exists, follow it unless repo reality proves it wrong. If the plan is wrong, stop and report the mismatch instead of improvising a new architecture.
 

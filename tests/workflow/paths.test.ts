@@ -15,17 +15,21 @@ describe("workflow paths", () => {
     expect(existsSync(path.join(rootDir, "src", "handoff"))).toBe(false);
   });
 
-  test("runtime prompts and config do not target legacy handoff state", async () => {
+  test("runtime prompts and config do not target legacy handoff state or active task pointer", async () => {
     const runtimeFiles = [
+      "README.md",
       "src/config.yaml",
       "src/prompts/orvo.md",
       "src/prompts/arch.md",
       "src/prompts/execution.md",
       "src/prompts/review.md",
+      "src/templates/STATUS.md",
     ];
 
     for (const file of runtimeFiles) {
-      expect(await readRepoFile(file), file).not.toContain(".4-man-team/handoff");
+      const content = await readRepoFile(file);
+      expect(content, file).not.toContain(".4-man-team/handoff");
+      expect(content, file).not.toContain(".4-man-team/current-task.md");
     }
   });
 });

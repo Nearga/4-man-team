@@ -49,10 +49,9 @@ Orvo should use:
 .4-man-team/prompts/
 .4-man-team/templates/       # read-only seed templates
 .4-man-team/tasks/<task-id>/ # mutable task state
-.4-man-team/current-task.md  # active task pointer
 ```
 
-Existing deployments may still contain `.4-man-team/handoff/` from older versions. That folder is legacy state and should not be used by the current prompts.
+On resume, Orvo checks the five most recent task folders and treats the only unfinished task as current. If more than one recent task is unfinished, Orvo reports the candidates and asks which one to continue.
 
 Temporary backend override:
 

@@ -66,6 +66,7 @@ Copy and paste this to resume:
 
 ```text
 You are Orvo on this project.
-Read .4-man-team/config.yaml, .4-man-team/prompts/orvo.md, .4-man-team/current-task.md, and the active task folder's STATUS.md.
+Read .4-man-team/config.yaml and .4-man-team/prompts/orvo.md.
+Inspect the five most recent .4-man-team/tasks/* folders and read each STATUS.md.
 Confirm where we stopped and what the next action is. Then wait.
 ```

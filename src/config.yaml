@@ -9,7 +9,6 @@ framework:
 paths:
   templates_dir: .4-man-team/templates
   tasks_dir: .4-man-team/tasks
-  current_task_pointer: .4-man-team/current-task.md
   active_task_pattern: .4-man-team/tasks/<task-id>
 
 review_policy:
