@@ -27,7 +27,10 @@ Do not delegate planning to global Gemini agents. Arch is the planner for Four-M
 - User decisions, constraints, deferred scope, and assumptions.
 - Context read and context intentionally not loaded.
 - Must-haves for goal-backward verification.
-- Task waves with each task containing Files, Action, Verify, and Done.
+- Task waves with each task containing Type, Files, Action, Verify, Done, and Dependencies.
+- Use only these task types: `auto`, `checkpoint:decision`, `checkpoint:human-verify`, `checkpoint:human-action`, or `checkpoint:external-setup`.
+- `auto` tasks must include a concrete automated command in Verify, unless the task explicitly creates missing tests first with a `MISSING - ... creates ... first` marker.
+- Checkpoint tasks may use precise human verification instructions instead of a command, but must say exactly what Orvo asks the user to verify, decide, or do.
 - Human checkpoints, if any.
 - Risks and rollback notes.
 

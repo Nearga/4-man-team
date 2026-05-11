@@ -27,6 +27,17 @@ export type PlanCheckResult = {
   errors: string[];
 };
 
+const requiredTaskFields = ["Type:", "Files:", "Action:", "Verify:", "Done:", "Dependencies:"] as const;
+const taskFieldNames = ["Type", "Files", "Action", "Verify", "Done", "Dependencies"] as const;
+const approvedTaskTypes = new Set([
+  "auto",
+  "checkpoint:decision",
+  "checkpoint:human-verify",
+  "checkpoint:human-action",
+  "checkpoint:external-setup",
+]);
+const commandPrefixPattern = /^(?:[-*]\s*)?(?:\[[ x]\]\s*)?(?:npm|bun|node|git|npx|pnpm|yarn|cargo|pytest|uv|make)\s+\S|^(?:[-*]\s*)?(?:\[[ x]\]\s*)?\.\/\S/;
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -45,6 +56,65 @@ function extractStillOpen(content: string): string[] {
     .map((line) => line.trim())
     .filter((line) => line.startsWith("- "))
     .map((line) => line.slice(2).trim());
+}
+
+function sectionBody(content: string, heading: string): string | null {
+  const escapedHeading = heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`^${escapedHeading}\\s*\\n([\\s\\S]*?)(?=^##\\s|(?![\\s\\S]))`, "m");
+  return content.match(pattern)?.[1]?.trim() ?? null;
+}
+
+function taskSections(content: string): string[] {
+  return sectionBody(content, "## Task Waves")?.match(/^#### Task [\s\S]*?(?=^#### Task |^##\s|(?![\s\S]))/gm) || [];
+}
+
+function fieldBody(task: string, field: (typeof taskFieldNames)[number]): string | null {
+  const labelPattern = taskFieldNames.join("|");
+  const pattern = new RegExp(`^${field}:\\s*(.*(?:\\n(?!(${labelPattern}):\\s*$|(${labelPattern}):\\s+|#{2,4}\\s).*)*)`, "m");
+  const match = task.match(pattern);
+  if (!match) return null;
+  return match[1].trim();
+}
+
+function taskType(task: string): string | null {
+  return fieldBody(task, "Type")?.split(/\s+/)[0]?.trim() || null;
+}
+
+function hasPlaceholder(text: string): boolean {
+  const trimmed = text.trim();
+  if (!trimmed) return true;
+  return (
+    /\[(?![ xX]\])([^\]\n]+)\]/.test(trimmed) ||
+    /\b(?:TBD|TODO)\b/i.test(trimmed) ||
+    /None\s*\/\s*\[Task or wave dependency\.\]/i.test(trimmed) ||
+    /^[-*]\s*$/m.test(trimmed)
+  );
+}
+
+function verificationLines(verify: string): string[] {
+  return verify
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("```"));
+}
+
+function hasExplicitMissingTestMarker(verify: string): boolean {
+  return /\bMISSING\s+-\s+.+\bcreates?\b.+\bfirst\b/i.test(verify);
+}
+
+function hasConcreteVerification(verify: string): boolean {
+  if (hasPlaceholder(verify)) return false;
+  const fencedBlocks = [...verify.matchAll(/```(?:bash|sh|shell)?\s*\n([\s\S]*?)```/gi)];
+  if (fencedBlocks.some((block) => verificationLines(block[1]).some((line) => commandPrefixPattern.test(line)))) {
+    return true;
+  }
+  return verificationLines(verify).some((line) => commandPrefixPattern.test(line));
+}
+
+function hasHumanVerification(verify: string): boolean {
+  if (hasPlaceholder(verify)) return false;
+  const words = verify.split(/\s+/).filter(Boolean);
+  return words.length >= 6;
 }
 
 async function parseTaskStatus(taskPath: string, id: string, mtimeMs: number): Promise<TaskCandidate> {
@@ -144,17 +214,37 @@ export async function checkPlan(planPath: string): Promise<PlanCheckResult> {
     }
   }
 
-  const taskSections = content.match(/#### Task [\s\S]*?(?=\n#### Task |\n## |$)/g) || [];
-  if (taskSections.length === 0) {
+  const tasks = taskSections(content);
+  if (tasks.length === 0) {
     errors.push("Missing task sections");
   }
 
-  for (const [index, task] of taskSections.entries()) {
+  for (const [index, task] of tasks.entries()) {
     const label = `Task ${index + 1}`;
-    for (const field of ["Files:", "Action:", "Verify:", "Done:"]) {
+    for (const field of requiredTaskFields) {
       if (!task.includes(field)) {
         errors.push(`${label} missing ${field}`);
+        continue;
       }
+
+      const body = fieldBody(task, field.slice(0, -1) as (typeof taskFieldNames)[number]);
+      if (body === null || hasPlaceholder(body)) {
+        errors.push(`${label} has placeholder or empty ${field}`);
+      }
+    }
+
+    const type = taskType(task);
+    if (type && !approvedTaskTypes.has(type)) {
+      errors.push(`${label} has unsupported Type: ${type}`);
+    }
+
+    const verify = fieldBody(task, "Verify");
+    if (!verify) continue;
+    if (type === "auto" && !hasConcreteVerification(verify) && !hasExplicitMissingTestMarker(verify)) {
+      errors.push(`${label} Verify: for auto tasks must include a concrete command or explicit missing-test marker`);
+    }
+    if (type?.startsWith("checkpoint:") && !hasConcreteVerification(verify) && !hasHumanVerification(verify)) {
+      errors.push(`${label} Verify: for checkpoint tasks must include a concrete command or precise human verification`);
     }
   }
 

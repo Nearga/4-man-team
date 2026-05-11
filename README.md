@@ -4,7 +4,9 @@ Single-entry agent workflow for Superset.
 
 User talks to **Orvo**. Orvo reads `.4-man-team/config.yaml`, chooses the task flow, asks before nontrivial work, routes agents through configured model priority lists, and writes post-close observations.
 
-Inspired by [russelleNVy/three-man-team](https://github.com/russelleNVy/three-man-team). This version adds model routing and Orvo as orchestrator/observer.
+Inspired by:
+* [russelleNVy/three-man-team](https://github.com/russelleNVy/three-man-team). This version adds agent routing and Orvo as orchestrator/observer.
+* [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done). Some planning patterns were adapted to Four-Man Team's task-folder workflow.
 
 ## Install
 
