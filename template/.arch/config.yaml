@@ -1,0 +1,72 @@
+framework:
+  name: Four-Man Team
+  version: 0.1.0
+  entrypoint: superset
+  user_facing_agent: arch
+
+review_policy:
+  require_different_model_than_executor: true
+  require_different_provider_when_possible: true
+  allow_same_provider_if_model_differs: true
+  on_no_distinct_reviewer: ask_user
+
+confirmation_policy:
+  ask_before:
+    - file_edits
+    - worktree_creation
+    - premium_planning
+    - multi_agent_flow
+    - merge_or_commit
+  allow_without_confirmation:
+    - read_only_search
+    - repo_summary
+    - draft_plan
+
+model_priorities:
+  planning:
+    - codex:gpt-5.3-codex
+    - gemini:gemini-3-pro
+    - mastracode:openai/gpt-5.2-codex
+    - opencode:opencode-go/glm-5.1
+  execution:
+    - opencode:opencode-go/qwen3.6-plus
+    - opencode:opencode-go/kimi-k2.6
+    - gemini:gemini-3-flash
+    - codex:gpt-5.3-codex
+  review:
+    - codex:gpt-5.3-codex
+    - gemini:gemini-3-pro
+    - opencode:opencode-go/deepseek-v4-pro
+  observation:
+    - gemini:gemini-3-pro
+    - codex:gpt-5.3-codex
+    - opencode:opencode-go/kimi-k2.6
+
+flows:
+  trivial:
+    plan: false
+    execute_with: execution
+    review: optional
+    observe_after_close: optional
+  medium:
+    plan: optional
+    execute_with: execution
+    review_with: review
+    observe_after_close: observation
+  complex:
+    plan_with: planning
+    confirm_after_plan: true
+    execute_with: execution
+    review_with: review
+    observe_after_close: observation
+
+fallback:
+  notify_user: true
+  record_in_status: true
+  stop_after_all_models_fail: true
+
+observer_policy:
+  run_after_reviewer: true
+  run_only_when_task_closed: true
+  blocks_closure: false
+  write_to: .arch/handoff/OBSERVATION.md
