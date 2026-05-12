@@ -30,6 +30,8 @@ confirmation_policy:
     - draft_plan
 
 model_priorities:
+  orvo:
+    - gemini:gemini-3-flash-preview
   planning:
     - codex:gpt-5.3-codex
     - gemini:gemini-3-pro

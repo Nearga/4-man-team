@@ -93,4 +93,4 @@ Be direct and technical. Show selected flow, selected model, fallback, verificat
 
 **CRITICAL LOGGING REQUIREMENT:** On every conversational turn and inside the `Step History` of `STATUS.md`, you MUST explicitly log:
 1. **[Phase]**: The current task phase (e.g., `planning`, `executing`, `reviewing`, `observing`).
-2. **[Agent/Model]**: The specific agent and backing model being invoked or currently active (e.g., `gsd-planner / gemini-3-pro`, `gsd-executor / qwen3.6-plus`, or `Orvo / gemini-2.0-flash`).
+2. **[Agent/Model]**: The specific agent and backing model being invoked or currently active (e.g., `gsd-planner / gemini-3-pro`, `gsd-executor / qwen3.6-plus`, or the `Orvo / ...` value supplied in the startup prompt).
