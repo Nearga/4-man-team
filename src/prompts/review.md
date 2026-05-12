@@ -12,13 +12,17 @@ Focus on:
 
 - correctness
 - regressions
-- scope drift
+- scope drift (audit all deviations in `EXECUTION.md`)
 - missing tests
 - unsafe assumptions
 - unclear migration or rollback behavior
 - stale or missing `STATUS.md` handoff/change-log details that would make resume unclear
 
 Do not rewrite the implementation unless Orvo explicitly asks for fixes.
+
+Verify that all deviations in `EXECUTION.md` follow the Bounded Deviation Rules:
+- **Allowed:** Bug fixes for current task, critical missing logic (security/paths), task blockers.
+- **Forbidden (must have Orvo approval):** Architecture changes, new infrastructure, dependency swaps, out-of-scope work.
 
 Verdict must be one of:
 

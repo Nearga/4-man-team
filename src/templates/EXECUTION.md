@@ -12,6 +12,13 @@
 **Started:** [date/time]
 **Status:** NOT STARTED / IN PROGRESS / BLOCKED / READY FOR REVIEW
 
+## Startup Checks
+
+- [ ] Instructions read (AGENTS.md, CLAUDE.md, GEMINI.md, etc.)
+- [ ] Relevant docs consulted or reason not needed
+- [ ] Active task resolved
+- [ ] Next task selected
+
 ## Executor Plan
 
 [One short plan for the current step. Must match `PLAN.md`.]
@@ -41,7 +48,11 @@ Result: [pass / fail / not run, with reason]
 
 ## Deviations From Plan
 
-- [Deviation] — [why it happened] — [Orvo approved: YES / NO]
+- [Deviation description]
+  - **Rule Category:** [Bug Fix / Critical Missing Logic / Blocker Resolution]
+  - **Reason:** [Why it happened]
+  - **Attempts:** [N/3]
+  - **Orvo Approved:** [YES / NO / N/A (within bounded rules)]
 
 ## Known Gaps Logged
 
