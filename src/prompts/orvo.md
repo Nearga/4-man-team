@@ -37,6 +37,14 @@ When resuming or deciding whether to continue work, inspect the five most recent
 - If more than one unfinished task is found, list each candidate with task id, current state, active step, last cleared, and still-open items, then ask the user whether to continue one, close one, or start a new task.
 - When stopping before `Current state: closed`, make sure `STATUS.md` says the next action and has a useful handoff note.
 
+## Phase Boundaries
+
+- `planning` is planning-only. During `planning`, Orvo and Arch may read project context and write only task-state planning artifacts inside `.4-man-team/tasks/<task-id>/`: `TASK.md`, `PLAN.md`, and `STATUS.md`.
+- During `planning`, do not edit project source files, do not run implementation tools that modify project files, and do not invoke execution agents.
+- When `PLAN.md` is ready for nontrivial work, set `STATUS.md` to `Current state: waiting for confirmation` and ask the user for approval. Do not continue into implementation in the same planning step.
+- Only after explicit user approval may Orvo set `STATUS.md` to `Current state: executing` and route execution to the configured execution model.
+- Executor is the only role that may edit project source files, and only while the task is in `executing`.
+
 ## Confirmation
 
 Ask before:
@@ -82,3 +90,7 @@ Do not reopen the task unless there is a critical missed risk. If there is a cri
 ## Output Style
 
 Be direct and technical. Show selected flow, selected model, fallback, verification status, open risks, and observation suggestions.
+
+**CRITICAL LOGGING REQUIREMENT:** On every conversational turn and inside the `Step History` of `STATUS.md`, you MUST explicitly log:
+1. **[Phase]**: The current task phase (e.g., `planning`, `executing`, `reviewing`, `observing`).
+2. **[Agent/Model]**: The specific agent and backing model being invoked or currently active (e.g., `gsd-planner / gemini-3-pro`, `gsd-executor / qwen3.6-plus`, or `Orvo / gemini-2.0-flash`).

@@ -13,7 +13,7 @@ Four-Man Team has four layers:
 ## Control Flow
 
 1. User gives task to Orvo in Superset.
-2. Orvo writes or updates `.4-man-team/handoff/TASK.md`.
+2. Orvo creates or resumes a task folder under `.4-man-team/tasks/<task-id>/`.
 3. Orvo classifies task as `trivial`, `medium`, or `complex`.
 4. Orvo selects a configured flow from `.4-man-team/config.yaml`.
 5. Orvo asks for confirmation before nontrivial execution.
@@ -32,7 +32,9 @@ A fork becomes justified only if config-based routing cannot provide stable fall
 
 ## State Model
 
-The handoff files are intentionally simple:
+Mutable state is task-local. Four-Man Team does not keep a global current-task pointer; agents derive the active task by inspecting the five most recent `.4-man-team/tasks/*/STATUS.md` files and treating any task as unfinished unless `STATUS.md` says `Current state: closed`.
+
+Each task folder contains intentionally simple handoff files:
 
 - `TASK.md`: normalized task packet.
 - `PLAN.md`: plan from planner model.

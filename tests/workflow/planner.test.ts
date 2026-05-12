@@ -25,6 +25,15 @@ describe("planner prompt and template", () => {
     expect(planTemplate).toContain("Done:");
   });
 
+  test("keeps Arch planning separate from execution", async () => {
+    const archPrompt = await readRepoFile("src/prompts/arch.md");
+
+    expect(archPrompt).toContain("Planning is not execution");
+    expect(archPrompt).toContain("Do not edit project source files");
+    expect(archPrompt).toContain("do not invoke execution agents");
+    expect(archPrompt).toContain("Write only the active task folder's `PLAN.md`");
+  });
+
   test("documents goal-backward must-have categories", async () => {
     const archPrompt = await readRepoFile("src/prompts/arch.md");
     const planTemplate = await readRepoFile("src/templates/PLAN.md");

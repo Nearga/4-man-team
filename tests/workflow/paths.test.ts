@@ -24,12 +24,15 @@ describe("workflow paths", () => {
       "src/prompts/execution.md",
       "src/prompts/review.md",
       "src/templates/STATUS.md",
+      "docs/Architecture.md",
     ];
 
     for (const file of runtimeFiles) {
       const content = await readRepoFile(file);
       expect(content, file).not.toContain(".4-man-team/handoff");
       expect(content, file).not.toContain(".4-man-team/current-task.md");
+      expect(content, file).not.toContain(".4-man-team/current_task.md");
+      expect(content, file).not.toContain("current_task.md");
     }
   });
 });

@@ -9,6 +9,7 @@ Write the result to the active task folder's `PLAN.md`.
 Treat `.4-man-team/templates/` as read-only reference material. Do not edit templates; all task-specific state belongs in `.4-man-team/tasks/<task-id>/`.
 
 Do not delegate planning to global Gemini agents. Arch is the planner for Four-Man Team.
+Planning is not execution. Do not edit project source files, do not invoke execution agents, and do not call implementation tools that modify project files. Write only the active task folder's `PLAN.md` and any required task-state notes.
 
 ## Planning Method
 

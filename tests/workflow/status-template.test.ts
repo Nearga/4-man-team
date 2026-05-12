@@ -41,6 +41,18 @@ describe("status resume template", () => {
     expect(reviewPrompt).toContain("handoff/change-log details");
   });
 
+  test("Orvo enforces planning-to-execution phase boundaries", async () => {
+    const orvoPrompt = await readRepoFile("src/prompts/orvo.md");
+
+    expect(orvoPrompt).toContain("`planning` is planning-only");
+    expect(orvoPrompt).toContain("write only task-state planning artifacts");
+    expect(orvoPrompt).toContain("do not edit project source files");
+    expect(orvoPrompt).toContain("do not invoke execution agents");
+    expect(orvoPrompt).toContain("Current state: waiting for confirmation");
+    expect(orvoPrompt).toContain("Current state: executing");
+    expect(orvoPrompt).toContain("Executor is the only role that may edit project source files");
+  });
+
   test("does not introduce separate resume state", async () => {
     const sourceFiles = [
       "src/prompts/orvo.md",
