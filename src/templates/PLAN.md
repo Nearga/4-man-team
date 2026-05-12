@@ -41,14 +41,20 @@ Context intentionally not loaded:
 
 ## Must Haves
 
+List must-haves before task waves. These prove the user goal, not just the implementation steps.
+
 Truths:
+*Observable outcomes that must be true from the user or system perspective.*
 - [Observable behavior that must be true for the goal to be achieved.]
 
 Artifacts:
+*Concrete files, scripts, configs, docs, or generated outputs. Use path-based artifacts when files change.*
 - `path/to/file` — [what real implementation must exist there.]
 
 Key links:
-- `[source] -> [target]` — [connection that must work.]
+*Important connections likely to break if missed, such as prompt -> template, CLI -> task folder, config -> runtime.*
+- `path/to/source` -> `path/to/target` — [connection that must work.]
+- None - no cross-file/runtime link for this trivial task.
 
 ## Task Waves
 
@@ -78,25 +84,30 @@ Dependencies:
 
 #### Task 2 — [Action-oriented name]
 
-Type: auto / checkpoint:decision / checkpoint:human-verify
+Type: checkpoint:decision
 
 Files:
-- `path/to/file.ext` — [ownership/change]
+- `path/to/file.ext` — no edits until the user decides.
 
 Action:
-[Specific implementation or checkpoint instructions.]
+Ask Orvo to ask the user: "[exact decision question]". Continue only after the user chooses one option. If the user declines or cannot decide, keep the task blocked and record the reason in `STATUS.md`.
 
 Verify:
-
-```bash
-[command]
-```
+User answer selects a concrete option and unblocks the dependent implementation task.
 
 Done:
-- [Measurable acceptance criterion.]
+- Orvo records the selected option in `STATUS.md`.
 
 Dependencies:
-- [Task or wave dependency.]
+- Task 1.
+
+## Checkpoint Rules
+
+- Approved task types: `auto`, `checkpoint:decision`, `checkpoint:human-verify`, `checkpoint:human-action`, `checkpoint:external-setup`.
+- If CLI, API, or browser automation can reasonably perform or verify the work, plan it as `auto`, not as a checkpoint.
+- Checkpoints are only for decisions, manual verification, external setup, or unavoidable user-only actions.
+- Checkpoint `Action:` must include the exact Orvo/user-facing question or instruction and what result unblocks execution.
+- Prefer checkpoints between waves; use an in-wave checkpoint only when the dependency is local and explicit.
 
 ## Human Checkpoints
 

@@ -24,6 +24,41 @@ describe("planner prompt and template", () => {
     expect(planTemplate).toContain("Done:");
   });
 
+  test("documents goal-backward must-have categories", async () => {
+    const archPrompt = await readRepoFile("src/prompts/arch.md");
+    const planTemplate = await readRepoFile("src/templates/PLAN.md");
+
+    expect(planTemplate).toContain("Truths:");
+    expect(planTemplate).toContain("Artifacts:");
+    expect(planTemplate).toContain("Key links:");
+    expect(planTemplate).toContain("Observable outcomes");
+    expect(planTemplate).toContain("path-based artifacts");
+    expect(archPrompt).toContain("working backward from the user goal");
+    expect(archPrompt).toContain("Map observable truths to concrete artifacts and key links");
+    expect(archPrompt).toContain("Avoid generic truths");
+  });
+
+  test("documents explicit checkpoint patterns", async () => {
+    const archPrompt = await readRepoFile("src/prompts/arch.md");
+    const planTemplate = await readRepoFile("src/templates/PLAN.md");
+    const taskTypes = [
+      "auto",
+      "checkpoint:decision",
+      "checkpoint:human-verify",
+      "checkpoint:human-action",
+      "checkpoint:external-setup",
+    ];
+
+    expect(planTemplate).toContain("## Checkpoint Rules");
+    for (const taskType of taskTypes) {
+      expect(planTemplate).toContain(taskType);
+    }
+    expect(planTemplate).toContain("CLI, API, or browser automation");
+    expect(planTemplate).toContain("exact Orvo/user-facing question or instruction");
+    expect(archPrompt).toContain("plan automation instead of a checkpoint");
+    expect(archPrompt).toContain("exact Orvo/user-facing ask");
+  });
+
   test("does not leak external GSD workflow references", async () => {
     const shippedFiles = [
       "src/prompts/arch.md",

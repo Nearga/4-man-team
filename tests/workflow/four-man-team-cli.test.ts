@@ -18,8 +18,26 @@ async function checkPlanContent(content: string) {
   }
 }
 
-function planWithTask(task: string): string {
+function planWithTask(
+  task: string,
+  options: {
+    selectedFlow?: string;
+    mustHaves?: string;
+  } = {},
+): string {
+  const mustHaves =
+    options.mustHaves ||
+    `Truths:
+- User can complete the flow.
+
+Artifacts:
+- \`src/app.ts\` — real implementation.
+
+Key links:
+- \`src/app.ts\` -> \`tests/app.test.ts\` — behavior covered.`;
+
   return `# Arch Plan
+${options.selectedFlow ? `\n**Selected flow:** ${options.selectedFlow}\n` : ""}
 
 ## Objective
 
@@ -45,14 +63,7 @@ Output: Working implementation.
 
 ## Must Haves
 
-Truths:
-- User can complete the flow.
-
-Artifacts:
-- \`src/app.ts\` — real implementation.
-
-Key links:
-- \`src/app.ts -> tests/app.test.ts\` — behavior covered.
+${mustHaves}
 
 ## Task Waves
 
@@ -213,7 +224,7 @@ Files:
 - \`src/app.ts\` — no code changes; user-visible behavior only.
 
 Action:
-Pause for the user to inspect the rendered settings screen.
+Ask Orvo to ask the user to inspect the rendered settings screen after refresh.
 
 Verify:
 Ask the user to confirm the settings screen shows the saved project name after refresh.
@@ -227,5 +238,289 @@ Dependencies:
 
     expect(result.valid).toBe(true);
     expect(result.errors).toEqual([]);
+  });
+
+  test("rejects missing must-have truths", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          mustHaves: `Artifacts:
+- \`src/app.ts\` — real implementation.
+
+Key links:
+- \`src/app.ts\` -> \`tests/app.test.ts\` — behavior covered.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Must Haves missing Truths:");
+  });
+
+  test("rejects placeholder must-have artifact", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          mustHaves: `Truths:
+- User can complete the flow.
+
+Artifacts:
+- [file] — [what changes]
+
+Key links:
+- \`src/app.ts\` -> \`tests/app.test.ts\` — behavior covered.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Must Haves Artifacts: has placeholder or empty content");
+  });
+
+  test("rejects file-changing plan without path-like artifact", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          mustHaves: `Truths:
+- User can complete the flow.
+
+Artifacts:
+- Application behavior is updated.
+
+Key links:
+- \`src/app.ts\` -> \`tests/app.test.ts\` — behavior covered.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "Must Haves Artifacts: must include at least one path-like artifact for file-changing plans",
+    );
+  });
+
+  test("rejects medium plan without real key links", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          selectedFlow: "medium",
+          mustHaves: `Truths:
+- User can complete the flow.
+
+Artifacts:
+- \`src/app.ts\` — real implementation.
+
+Key links:
+- None - no cross-file/runtime link for this trivial task.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Must Haves Key links: must include real key links for medium plans");
+  });
+
+  test("rejects medium plan with vague key links", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          selectedFlow: "medium",
+          mustHaves: `Truths:
+- User can complete the flow.
+
+Artifacts:
+- \`src/app.ts\` — real implementation.
+
+Key links:
+- Runtime wiring keeps working.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Must Haves Key links: must include real key links for medium plans");
+  });
+
+  test("allows trivial plan with explicit no key links", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Implement feature
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Add the feature using existing patterns.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works and tests pass.
+
+Dependencies:
+- None.`,
+        {
+          selectedFlow: "trivial",
+          mustHaves: `Truths:
+- User can complete the flow.
+
+Artifacts:
+- \`src/app.ts\` — real implementation.
+
+Key links:
+- None - no cross-file/runtime link for this trivial task.`,
+        },
+      ),
+    );
+
+    expect(result.valid).toBe(true);
+    expect(result.errors).toEqual([]);
+  });
+
+  test("rejects unknown checkpoint task type", async () => {
+    const result = await checkPlanContent(
+      planWithTask(`#### Task 1 — Unknown checkpoint
+
+Type: checkpoint:approval
+
+Files:
+- \`src/app.ts\` — no edits until approval.
+
+Action:
+Ask Orvo to ask the user whether to continue.
+
+Verify:
+User answer confirms whether execution can continue.
+
+Done:
+- User confirms the next action.
+
+Dependencies:
+- None.`),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Task 1 has unsupported Type: checkpoint:approval");
+  });
+
+  test("rejects checkpoint task without explicit user ask", async () => {
+    const result = await checkPlanContent(
+      planWithTask(`#### Task 1 — Vague checkpoint
+
+Type: checkpoint:decision
+
+Files:
+- \`src/app.ts\` — no edits until decision.
+
+Action:
+Pause for confirmation before changing settings behavior.
+
+Verify:
+User answer selects a concrete settings behavior and unblocks implementation.
+
+Done:
+- User confirms the selected settings behavior.
+
+Dependencies:
+- None.`),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "Task 1 Action: for checkpoint tasks must include an explicit Orvo or user ask",
+    );
   });
 });

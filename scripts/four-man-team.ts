@@ -37,6 +37,7 @@ const approvedTaskTypes = new Set([
   "checkpoint:external-setup",
 ]);
 const commandPrefixPattern = /^(?:[-*]\s*)?(?:\[[ x]\]\s*)?(?:npm|bun|node|git|npx|pnpm|yarn|cargo|pytest|uv|make)\s+\S|^(?:[-*]\s*)?(?:\[[ x]\]\s*)?\.\/\S/;
+const pathLikePattern = /`[^`]*(?:\/|\.ts|\.tsx|\.js|\.jsx|\.md|\.json|\.ya?ml|\.sh)[^`]*`|`(?:npm|bun|node|git|npx|pnpm|yarn|cargo|pytest|uv|make)\s+[^`]+`/;
 
 export function slugify(text: string): string {
   return text
@@ -66,6 +67,18 @@ function sectionBody(content: string, heading: string): string | null {
 
 function taskSections(content: string): string[] {
   return sectionBody(content, "## Task Waves")?.match(/^#### Task [\s\S]*?(?=^#### Task |^##\s|(?![\s\S]))/gm) || [];
+}
+
+function selectedFlow(content: string): string | null {
+  const value = content.match(/\*\*Selected flow:\*\*\s*([^\n]+)/i)?.[1]?.trim().toLowerCase();
+  if (!value || hasPlaceholder(value)) return null;
+  return value.split(/\s+/)[0] || null;
+}
+
+function mustHaveCategory(section: string, category: "Truths" | "Artifacts" | "Key links"): string | null {
+  const labels = ["Truths", "Artifacts", "Key links"].join("|");
+  const pattern = new RegExp(`^${category}:\\s*\\n?([\\s\\S]*?)(?=^(${labels}):\\s*$|^(${labels}):\\s+|(?![\\s\\S]))`, "mi");
+  return section.match(pattern)?.[1]?.trim() ?? null;
 }
 
 function fieldBody(task: string, field: (typeof taskFieldNames)[number]): string | null {
@@ -115,6 +128,61 @@ function hasHumanVerification(verify: string): boolean {
   if (hasPlaceholder(verify)) return false;
   const words = verify.split(/\s+/).filter(Boolean);
   return words.length >= 6;
+}
+
+function hasExplicitCheckpointAction(action: string): boolean {
+  if (hasPlaceholder(action)) return false;
+  return /\bAsk (?:Orvo|the user)\b/i.test(action);
+}
+
+function hasPathLikeToken(text: string): boolean {
+  return pathLikePattern.test(text);
+}
+
+function hasFileChangingTask(tasks: string[]): boolean {
+  return tasks.some((task) => {
+    const files = fieldBody(task, "Files");
+    return Boolean(files && hasPathLikeToken(files) && !/\b(no edits|no code changes|no file changes)\b/i.test(files));
+  });
+}
+
+function hasExplicitNoKeyLinks(text: string): boolean {
+  return /\bNone\s+-\s+no cross-file\/runtime link for this trivial task\b/i.test(text);
+}
+
+function hasRealKeyLink(text: string): boolean {
+  return hasPathLikeToken(text) && /(?:->|→)/.test(text);
+}
+
+function validateMustHaves(content: string, tasks: string[], errors: string[]): void {
+  const section = sectionBody(content, "## Must Haves");
+  if (!section) return;
+
+  const categories = ["Truths", "Artifacts", "Key links"] as const;
+  const values = new Map<(typeof categories)[number], string>();
+
+  for (const category of categories) {
+    const body = mustHaveCategory(section, category);
+    if (body === null) {
+      errors.push(`Must Haves missing ${category}:`);
+      continue;
+    }
+    values.set(category, body);
+    if (hasPlaceholder(body)) {
+      errors.push(`Must Haves ${category}: has placeholder or empty content`);
+    }
+  }
+
+  const artifacts = values.get("Artifacts") || "";
+  if (hasFileChangingTask(tasks) && artifacts && !hasPlaceholder(artifacts) && !hasPathLikeToken(artifacts)) {
+    errors.push("Must Haves Artifacts: must include at least one path-like artifact for file-changing plans");
+  }
+
+  const flow = selectedFlow(content);
+  const keyLinks = values.get("Key links") || "";
+  if (flow && ["medium", "complex", "tdd"].includes(flow) && !hasPlaceholder(keyLinks) && !hasRealKeyLink(keyLinks)) {
+    errors.push(`Must Haves Key links: must include real key links for ${flow} plans`);
+  }
 }
 
 async function parseTaskStatus(taskPath: string, id: string, mtimeMs: number): Promise<TaskCandidate> {
@@ -219,6 +287,8 @@ export async function checkPlan(planPath: string): Promise<PlanCheckResult> {
     errors.push("Missing task sections");
   }
 
+  validateMustHaves(content, tasks, errors);
+
   for (const [index, task] of tasks.entries()) {
     const label = `Task ${index + 1}`;
     for (const field of requiredTaskFields) {
@@ -245,6 +315,11 @@ export async function checkPlan(planPath: string): Promise<PlanCheckResult> {
     }
     if (type?.startsWith("checkpoint:") && !hasConcreteVerification(verify) && !hasHumanVerification(verify)) {
       errors.push(`${label} Verify: for checkpoint tasks must include a concrete command or precise human verification`);
+    }
+
+    const action = fieldBody(task, "Action");
+    if (type?.startsWith("checkpoint:") && action && !hasExplicitCheckpointAction(action)) {
+      errors.push(`${label} Action: for checkpoint tasks must include an explicit Orvo or user ask`);
     }
   }
 
