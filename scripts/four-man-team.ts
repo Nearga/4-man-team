@@ -38,6 +38,7 @@ const approvedTaskTypes = new Set([
 ]);
 const commandPrefixPattern = /^(?:[-*]\s*)?(?:\[[ x]\]\s*)?(?:npm|bun|node|git|npx|pnpm|yarn|cargo|pytest|uv|make)\s+\S|^(?:[-*]\s*)?(?:\[[ x]\]\s*)?\.\/\S/;
 const pathLikePattern = /`[^`]*(?:\/|\.ts|\.tsx|\.js|\.jsx|\.md|\.json|\.ya?ml|\.sh)[^`]*`|`(?:npm|bun|node|git|npx|pnpm|yarn|cargo|pytest|uv|make)\s+[^`]+`/;
+const testCommandPattern = /\b(?:npm test|npm run test|bun test|pytest|cargo test|yarn test|pnpm test)\b/;
 
 export function slugify(text: string): string {
   return text
@@ -154,6 +155,29 @@ function hasRealKeyLink(text: string): boolean {
   return hasPathLikeToken(text) && /(?:->|→)/.test(text);
 }
 
+function hasTestReference(text: string): boolean {
+  return /\btests?\b|\/tests?\/|\.test\.|\.spec\./i.test(text);
+}
+
+function taskIsCheckpoint(task: string): boolean {
+  return taskType(task)?.startsWith("checkpoint:") || false;
+}
+
+function taskIsTestFocused(task: string): boolean {
+  const files = fieldBody(task, "Files") || "";
+  const action = fieldBody(task, "Action") || "";
+  return hasTestReference(`${files}\n${action}`) && /\b(?:create|add|update|write|failing|red)\b/i.test(action);
+}
+
+function hasConcreteTestCommand(task: string): boolean {
+  const verify = fieldBody(task, "Verify") || "";
+  return hasConcreteVerification(verify) && testCommandPattern.test(verify);
+}
+
+function hasTddSequencing(content: string): boolean {
+  return /\bred\b/i.test(content) && /\bgreen\b/i.test(content) && /\brefactor\b/i.test(content);
+}
+
 function validateMustHaves(content: string, tasks: string[], errors: string[]): void {
   const section = sectionBody(content, "## Must Haves");
   if (!section) return;
@@ -182,6 +206,27 @@ function validateMustHaves(content: string, tasks: string[], errors: string[]): 
   const keyLinks = values.get("Key links") || "";
   if (flow && ["medium", "complex", "tdd"].includes(flow) && !hasPlaceholder(keyLinks) && !hasRealKeyLink(keyLinks)) {
     errors.push(`Must Haves Key links: must include real key links for ${flow} plans`);
+  }
+}
+
+function validateTddPlan(content: string, tasks: string[], errors: string[]): void {
+  if (selectedFlow(content) !== "tdd") return;
+
+  if (!hasTddSequencing(content)) {
+    errors.push("TDD plans must include red/green/refactor sequencing");
+  }
+
+  if (!tasks.some((task) => hasTestReference(`${fieldBody(task, "Files") || ""}\n${fieldBody(task, "Action") || ""}`))) {
+    errors.push("TDD plans must include a task that creates or updates a test");
+  }
+
+  const firstAutoTask = tasks.find((task) => !taskIsCheckpoint(task));
+  if (!firstAutoTask || !taskIsTestFocused(firstAutoTask)) {
+    errors.push("TDD plans must start with a test-focused non-checkpoint task");
+  }
+
+  if (!tasks.some((task) => hasConcreteTestCommand(task))) {
+    errors.push("TDD plans must include a concrete test verification command");
   }
 }
 
@@ -288,6 +333,7 @@ export async function checkPlan(planPath: string): Promise<PlanCheckResult> {
   }
 
   validateMustHaves(content, tasks, errors);
+  validateTddPlan(content, tasks, errors);
 
   for (const [index, task] of tasks.entries()) {
     const label = `Task ${index + 1}`;

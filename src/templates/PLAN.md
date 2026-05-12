@@ -8,7 +8,7 @@
 ## Step [N] — [What is being built]
 
 **Planner model:** [provider:model]
-**Selected flow:** [trivial / medium / complex]
+**Selected flow:** [trivial / medium / complex / tdd]
 
 ## Objective
 
@@ -55,6 +55,17 @@ Key links:
 *Important connections likely to break if missed, such as prompt -> template, CLI -> task folder, config -> runtime.*
 - `path/to/source` -> `path/to/target` — [connection that must work.]
 - None - no cross-file/runtime link for this trivial task.
+
+## TDD Notes
+
+Use `Selected flow: tdd` when expected behavior can be stated before implementation. Good fits include pure functions, validation rules, data transforms, API contracts, state machines, CLI input/output, and deployment logic.
+
+TDD is usually not useful for prompt-only edits, docs-only edits, one-off shell glue, or visual/UI polish without stable assertions.
+
+For TDD plans:
+- The first non-checkpoint task must add or update the failing test.
+- Include red/green/refactor sequencing in the task actions.
+- Include a concrete test verification command such as `npm test`, `bun test`, `pytest`, or `cargo test`.
 
 ## Task Waves
 

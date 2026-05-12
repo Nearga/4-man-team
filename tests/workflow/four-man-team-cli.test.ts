@@ -116,6 +116,13 @@ describe("four-man-team workflow helpers", () => {
     expect(result.errors).toEqual([]);
   });
 
+  test("validates executable TDD plan structure", async () => {
+    const result = await checkPlan(path.join(fixturesDir, "tdd-plan.md"));
+
+    expect(result.valid).toBe(true);
+    expect(result.errors).toEqual([]);
+  });
+
   test("rejects incomplete plan structure", async () => {
     const result = await checkPlan(path.join(fixturesDir, "invalid-plan.md"));
 
@@ -468,6 +475,112 @@ Key links:
 
     expect(result.valid).toBe(true);
     expect(result.errors).toEqual([]);
+  });
+
+  test("rejects TDD plan without red green refactor sequencing", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Add tests
+
+Type: auto
+
+Files:
+- \`tests/app.test.ts\` — add behavior coverage.
+
+Action:
+Add a failing test for the new behavior.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Behavior test exists.
+
+Dependencies:
+- None.`,
+        { selectedFlow: "tdd" },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("TDD plans must include red/green/refactor sequencing");
+  });
+
+  test("rejects TDD plan without test-focused first task", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Green - Implement feature first
+
+Type: auto
+
+Files:
+- \`src/app.ts\` — update behavior.
+
+Action:
+Green: implement behavior first. Red and refactor steps follow later.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Feature works.
+
+Dependencies:
+- None.
+
+#### Task 2 — Red - Add behavior test
+
+Type: auto
+
+Files:
+- \`tests/app.test.ts\` — add behavior coverage.
+
+Action:
+Red: add a failing test for the behavior and refactor after it passes.
+
+Verify:
+- [ ] npm test
+
+Done:
+- Behavior test exists.
+
+Dependencies:
+- Task 1.`,
+        { selectedFlow: "tdd" },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("TDD plans must start with a test-focused non-checkpoint task");
+  });
+
+  test("rejects TDD plan without concrete test command", async () => {
+    const result = await checkPlanContent(
+      planWithTask(
+        `#### Task 1 — Red - Add behavior test
+
+Type: auto
+
+Files:
+- \`tests/app.test.ts\` — add behavior coverage.
+
+Action:
+Red: add a failing test for the behavior, then green implementation and refactor cleanup.
+
+Verify:
+Run the relevant tests.
+
+Done:
+- Behavior test exists.
+
+Dependencies:
+- None.`,
+        { selectedFlow: "tdd" },
+      ),
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("TDD plans must include a concrete test verification command");
   });
 
   test("rejects unknown checkpoint task type", async () => {

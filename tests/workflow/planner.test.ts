@@ -16,6 +16,7 @@ describe("planner prompt and template", () => {
     expect(archPrompt).toContain("goal-backward");
     expect(archPrompt).toContain("vertical slices");
     expect(archPrompt).toContain("TDD candidates");
+    expect(planTemplate).toContain("trivial / medium / complex / tdd");
     expect(planTemplate).toContain("## Must Haves");
     expect(planTemplate).toContain("## Task Waves");
     expect(planTemplate).toContain("Files:");
@@ -57,6 +58,41 @@ describe("planner prompt and template", () => {
     expect(planTemplate).toContain("exact Orvo/user-facing question or instruction");
     expect(archPrompt).toContain("plan automation instead of a checkpoint");
     expect(archPrompt).toContain("exact Orvo/user-facing ask");
+  });
+
+  test("documents TDD flow selection and sequencing", async () => {
+    const archPrompt = await readRepoFile("src/prompts/arch.md");
+    const planTemplate = await readRepoFile("src/templates/PLAN.md");
+    const tddCandidates = [
+      "pure functions",
+      "validation rules",
+      "data transforms",
+      "API contracts",
+      "state machines",
+      "CLI input/output",
+      "deployment logic",
+    ];
+    const poorTddCandidates = [
+      "prompt-only edits",
+      "docs-only edits",
+      "one-off shell glue",
+      "visual/UI polish",
+    ];
+
+    expect(planTemplate).toContain("## TDD Notes");
+    expect(planTemplate).toContain("Selected flow: tdd");
+    expect(planTemplate).toContain("red/green/refactor");
+    expect(archPrompt).toContain("Selected flow: tdd");
+    expect(archPrompt).toContain("first non-checkpoint task test-focused");
+    expect(archPrompt).toContain("red/green/refactor");
+    for (const candidate of tddCandidates) {
+      expect(archPrompt).toContain(candidate);
+      expect(planTemplate).toContain(candidate);
+    }
+    for (const candidate of poorTddCandidates) {
+      expect(archPrompt).toContain(candidate);
+      expect(planTemplate).toContain(candidate);
+    }
   });
 
   test("does not leak external GSD workflow references", async () => {

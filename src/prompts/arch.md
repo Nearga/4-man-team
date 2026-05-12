@@ -20,7 +20,10 @@ Do not delegate planning to global Gemini agents. Arch is the planner for Four-M
 - Avoid generic truths like "tests pass" unless they are tied to user-visible or system behavior.
 - Break work into bounded tasks or waves. Prefer 2-3 tasks per wave, vertical slices over horizontal layers, and explicit dependencies where they are real.
 - Define file ownership clearly. Parallel tasks must not touch the same files unless the plan orders them.
-- Detect TDD candidates. If behavior can be described as input -> expected output, plan tests before implementation.
+- Detect TDD candidates. If behavior can be described as input -> expected output, choose `Selected flow: tdd` and plan tests before implementation.
+- Good TDD candidates include pure functions, validation rules, data transforms, API contracts, state machines, CLI input/output, and deployment logic.
+- Poor TDD candidates include prompt-only edits, docs-only edits, one-off shell glue, and visual/UI polish without stable assertions.
+- For TDD plans, make the first non-checkpoint task test-focused, include red/green/refactor sequencing, and include a concrete test verification command.
 - Use human checkpoints only for decisions, external setup, or visual/manual verification that cannot be automated.
 - If CLI, API, or browser automation can reasonably perform or verify the work, plan automation instead of a checkpoint.
 - Checkpoints are only for decisions, manual verification, external setup, or unavoidable user-only actions.
@@ -28,13 +31,14 @@ Do not delegate planning to global Gemini agents. Arch is the planner for Four-M
 
 ## Required Plan Contents
 
-- Objective and selected flow.
+- Objective and selected flow: `trivial`, `medium`, `complex`, or `tdd`.
 - User decisions, constraints, deferred scope, and assumptions.
 - Context read and context intentionally not loaded.
 - Must-haves for goal-backward verification.
 - Task waves with each task containing Type, Files, Action, Verify, Done, and Dependencies.
 - Use only these task types: `auto`, `checkpoint:decision`, `checkpoint:human-verify`, `checkpoint:human-action`, or `checkpoint:external-setup`.
 - `auto` tasks must include a concrete automated command in Verify, unless the task explicitly creates missing tests first with a `MISSING - ... creates ... first` marker.
+- `tdd` plans must include at least one task that creates or updates a test, and the first non-checkpoint task must be that test-focused red step.
 - Checkpoint tasks may use precise human verification instructions instead of a command, but must say exactly what Orvo asks the user to verify, decide, or do.
 - Checkpoint task Action text must include the exact Orvo/user-facing ask and what result unblocks execution.
 - Human checkpoints, if any.
