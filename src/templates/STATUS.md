@@ -52,6 +52,7 @@ Decisions made:
 
 Reviewer findings: [summary]
 Observation: [summary]
+Agent watch: [handoff/scope/blocker check, or N/A]
 Deploy/commit: [confirmed / pending / not applicable]
 
 ## Known Gaps

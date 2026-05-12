@@ -4,7 +4,7 @@
 
 Before starting any implementation:
 
-1.  **Resolve Active Task:** Inspect the five most recent folders under `.4-man-team/tasks/` and read each `STATUS.md`. If exactly one task is unfinished, that is the active task. If more than one task is unfinished, stop and ask Orvo which task to use.
+1.  **Resolve Active Task:** Inspect the five most recent folders under `.4-man-team/tasks/` and read each `STATUS.md`. If exactly one task is unfinished, that is the active task. If zero or more than one task is unfinished, stop and ask Orvo which task to use.
 2.  **Load Instructions:** Read project instruction files (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and any target-project equivalent). These are **hard constraints**. If they conflict with the plan, the project instructions win.
 3.  **Check Resume State:** If resuming after a checkpoint, verify the prior checkpoint result in `STATUS.md` before continuing.
 4.  **Select Task/Plan:**

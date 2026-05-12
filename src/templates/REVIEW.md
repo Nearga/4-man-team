@@ -14,7 +14,7 @@
 
 ## Verdict
 
-[APPROVED / APPROVED WITH CONDITIONS / REJECTED]
+[approve / approve_with_notes / request_changes]
 
 ## Must Fix
 *Blocks the step. Executor fixes before anything moves forward.*

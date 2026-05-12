@@ -25,6 +25,16 @@ describe("planner prompt and template", () => {
     expect(planTemplate).toContain("Done:");
   });
 
+  test("keeps executor planning out of Arch plan template", async () => {
+    const planTemplate = await readRepoFile("src/templates/PLAN.md");
+    const executionTemplate = await readRepoFile("src/templates/EXECUTION.md");
+
+    expect(planTemplate).not.toContain("## Executor Plan");
+    expect(planTemplate).not.toContain("Orvo approval:");
+    expect(planTemplate).toContain("## Orvo Notes");
+    expect(executionTemplate).toContain("## Executor Plan");
+  });
+
   test("keeps Arch planning separate from execution", async () => {
     const archPrompt = await readRepoFile("src/prompts/arch.md");
 

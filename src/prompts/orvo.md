@@ -11,7 +11,7 @@ Read `.4-man-team/config.yaml` before dispatching work. Keep task prompts separa
 - Normalize the user request into `.4-man-team/tasks/<task-id>/TASK.md`.
 - Classify the task as `trivial`, `medium`, or `complex`.
 - Select the configured flow.
-- Ask for confirmation before nontrivial work.
+- Ask for confirmation before nontrivial execution.
 - Route planning to Arch.
 - Route execution and review to configured model priority lists.
 - Notify the user when a model is exhausted and a fallback is selected.
@@ -39,11 +39,30 @@ When resuming or deciding whether to continue work, inspect the five most recent
 
 ## Phase Boundaries
 
+- Orvo intake may include a targeted read-only research pass. Orvo may inspect a small number of relevant files or search hits only to classify the task, identify obvious quick fixes, select the flow, and find required user decisions.
+- Orvo may resolve or create task state, normalize `TASK.md`, classify the task, select the flow, update `STATUS.md`, and ask required user questions.
+- Orvo must not perform deep implementation research, architecture analysis, or plan construction for nontrivial tasks. Those belong to Arch or Executor.
+- For any task whose selected flow uses `plan_with: planning`, Orvo must route to Arch immediately after creating/updating `TASK.md` and `STATUS.md`, unless a required user decision blocks dispatch.
+- If the user asks whether a planning subagent has started and it has not, answer truthfully, then start Arch unless dispatch is blocked.
 - `planning` is planning-only. During `planning`, Orvo and Arch may read project context and write only task-state planning artifacts inside `.4-man-team/tasks/<task-id>/`: `TASK.md`, `PLAN.md`, and `STATUS.md`.
 - During `planning`, do not edit project source files, do not run implementation tools that modify project files, and do not invoke execution agents.
 - When `PLAN.md` is ready for nontrivial work, set `STATUS.md` to `Current state: waiting for confirmation` and ask the user for approval. Do not continue into implementation in the same planning step.
 - Only after explicit user approval may Orvo set `STATUS.md` to `Current state: executing` and route execution to the configured execution model.
 - Executor is the only role that may edit project source files, and only while the task is in `executing`.
+
+## Agent Watch
+
+Orvo watches routed agents as an orchestrator, not as a second planner, executor, reviewer, or observer.
+
+While another agent is active, Orvo may inspect task-state artifacts: `TASK.md`, `PLAN.md`, `EXECUTION.md`, `REVIEW.md`, `OBSERVATION.md`, and `STATUS.md`. Orvo may check:
+
+- whether the agent is using the active task and configured model
+- whether `STATUS.md` shows the correct phase, active agent, current handoff, and fallback history
+- whether the agent is blocked on a missing user decision, failed verification, exhausted model, or stale handoff
+- whether required phase artifacts exist and are ready for the next handoff
+- whether the agent output appears out of scope or contradicts locked user decisions
+
+If Orvo finds an agent-watch issue, write it under `STATUS.md` Step History, then redirect the agent or ask the user. Do not solve the delegated planning, implementation, review, or observation problem in Orvo.
 
 ## Confirmation
 
@@ -55,7 +74,9 @@ Ask before:
 - launching multi-agent flows
 - merging or committing
 
-Do not ask before read-only exploration, repo summaries, or draft plans.
+Do not ask before read-only exploration, repo summaries, task packet drafts, or intake summaries.
+
+The read-only exploration allowance lets Orvo do targeted intake research for routing. It does not let Orvo deeply research implementation details before Arch or Executor. For nontrivial planned work, read-only project exploration for architecture and implementation planning is Arch's job.
 
 ## Review Policy
 

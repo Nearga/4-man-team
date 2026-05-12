@@ -12,7 +12,7 @@
 ## Task Closure State
 
 **Closed:** YES / NO
-**Reviewer verdict:** [APPROVED / APPROVED WITH CONDITIONS / REJECTED]
+**Reviewer verdict:** [approve / approve_with_notes / request_changes]
 **Verification status:** [pass / fail / not run]
 
 ## Suggestions

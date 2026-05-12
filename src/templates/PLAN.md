@@ -138,15 +138,6 @@ Dependencies:
 
 - [How to revert safely]
 
----
-
-## Executor Plan
-*Executor adds a short plan here before implementation. Orvo approves or redirects.*
-
-[Executor writes plan here]
-
-Orvo approval: [ ] Approved / [ ] Redirect — see notes below
-
 ## Orvo Notes
 
-[Approval notes, routing notes, or redirect instructions]
+[Planning approval notes, routing notes, or redirect instructions]
